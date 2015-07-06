@@ -1,0 +1,20 @@
+{
+  "description": "A Lightweight,Open Source PHP Framework For Mobile App",
+  "name": "swallow/framework",
+  "type": "project",
+  "license": "MIT",
+  "require": {
+    "php": ">=5.3.0"
+  },
+  "repositories": [
+    {"type": "composer", "url": "http://pkg.phpcomposer.com/repo/packagist/"},
+    {"packagist": false}
+  ],
+  "autoload": {
+    "classmap": [
+      "apps/controllers",
+      "apps/models",
+      "swallow"
+    ]
+  }
+}
