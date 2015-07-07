@@ -5,7 +5,7 @@
  * @version     1.0.0
  * @package     core
  * @author      Swallow Dev Team
- * @license	http://opensource.org/licenses/MIT	MIT License
+ * @license	http://opensource.org/licenses/MIT  MIT License
  *
  * This content is released under the MIT License (MIT)
  *

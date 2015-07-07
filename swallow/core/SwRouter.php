@@ -18,7 +18,27 @@ class SwRouter
      * 支持的http请求方法
      * @var array
      */
-    private static $HTTP_REQUEST_METHODS = array('GET','POST','PUT','DELETE','OPTIONS','PATCH','HEAD');
+    private static $HTTP_REQUEST_METHODS = array(
+        'ANY',
+        'GETPOST',
+        'GET',
+        'POST',
+        'PUT',
+        'DELETE',
+        'OPTIONS',
+        'PATCH',
+        'HEAD'
+    );
+
+    /**
+     * 模式匹配
+     * @var array
+     */
+    private static $patterns = array(
+        ':any' => '[^/]+',
+        ':num' => '[0-9]+',
+        ':all' => '.*'
+    );
 
     /**
      * 路由列表
@@ -72,6 +92,8 @@ class SwRouter
             if (in_array(strtoupper($name),self::$HTTP_REQUEST_METHODS)) {
                 if ($name == 'any') {
                     $this->match('GET|POST|PUT|DELETE|PATCH|OPTIONS|HEAD',$pattern,$fn);
+                } elseif ($name == 'getpost') {
+                    $this->match('GET|POST',$pattern,$fn);
                 } else {
                     $this->match($name, $pattern, $fn);
                 }
@@ -81,15 +103,15 @@ class SwRouter
 
     /**
      * 匹配路由前预处理
-     * @param $methods
-     * @param $pattern
-     * @param $fn
+     * @param $requestMethods HTTP请求方法 GET/POST/PUT/DELETE/PATCH/OPTIONS/HEAD
+     * @param $pattern 匹配规则
+     * @param $fn 处理函数
      */
-    public function before($methods,$pattern,$fn)
+    public function before($requestMethods,$pattern,$fn)
     {
         $pattern = $this->baseroute . '/' . trim($pattern, '/');
         $pattern = $this->baseroute ? rtrim($pattern, '/') : $pattern;
-        foreach (explode('|', $methods) as $method) {
+        foreach (explode('|', $requestMethods) as $method) {
             $this->befores[$method][] = array(
                 'pattern' => $pattern,
                 'fn' => $fn
@@ -99,19 +121,23 @@ class SwRouter
 
     /**
      * 匹配
-     * @param $methods
-     * @param $pattern
-     * @param $fn
+     * @param $requestMethods HTTP请求方法 GET/POST/PUT/DELETE/PATCH/OPTIONS/HEAD
+     * @param $pattern 匹配规则
+     * @param $fn 处理函数
      */
-    public function match($methods, $pattern, $fn)
+    public function match($requestMethods, $pattern, $fn)
     {
         $pattern = $this->baseroute . '/' . trim($pattern, '/');
         $pattern = $this->baseroute ? rtrim($pattern, '/') : $pattern;
-        foreach (explode('|', $methods) as $method) {
-            $this->routes[$method][] = array(
+        foreach (explode('|', $requestMethods) as $method) {
+            $method = strtoupper($method);
+            if (!isset($this->router[$method])) {
+                $this->router[$method] = array();
+            }
+            array_push($this->router[$method],array(
                 'pattern' => $pattern,
                 'fn' => $fn
-            );
+            ));
         }
     }
 
@@ -188,6 +214,7 @@ class SwRouter
                 call_user_func($this->notFound);
             } else {
                 header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
+                echo "<h1>404 Not Found.</h1>";die;
             }
         } else {
             if ($callback != null) {
@@ -210,6 +237,8 @@ class SwRouter
         $numHandled = 0;
         $uri = $this->getCurrentUri();
         foreach ($routes as $route) {
+            print_r($route['fn']);
+            print_r($uri);
             if (preg_match_all('~^'. $route['pattern'] .'$~',$uri,$matches,PREG_OFFSET_CAPTURE)) {
                 $matches = array_slice($matches, 1);
                 $params = array_map(function ($match, $index) use ($matches) {
@@ -224,7 +253,15 @@ class SwRouter
                     }
                 }, $matches, array_keys($matches));
 
-                call_user_func_array($route['fn'], $params);
+                if (is_object($route['fn']) && is_callable($route['fn'])) {
+                    call_user_func_array($route['fn'], $params);
+                } else {
+                    $parts = explode('/',$route['fn']);
+                    $last = end($parts);
+                    $segments = explode('@',$last);
+                    $controller = new $segments[0]();
+                    $controller->$segments[1]();
+                }
 
                 $numHandled++;
 
