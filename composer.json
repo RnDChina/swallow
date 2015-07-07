@@ -11,6 +11,9 @@
     {"packagist": false}
   ],
   "autoload": {
+    "classmap":[
+        "apps/controllers"
+    ],
     "psr-4": {
       "swallow\\":"swallow/"
     }
