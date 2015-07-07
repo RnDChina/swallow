@@ -19,7 +19,7 @@ $router->get('/user/:num/:string/:num/',function(){
     echo 'welcome2';
 });
 
-//$router->get('/test','apps/controller/HomeController@index');
+$router->get('/test','apps/controller/HomeController@index');
 
 //$router->addRoute(['GET','POST'],'/abc',function(){
 //   echo "abc";

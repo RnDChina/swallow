@@ -15,7 +15,8 @@
         "apps/controllers"
     ],
     "psr-4": {
-      "swallow\\":"swallow/"
+      "swallow\\":"swallow/",
+      "apps\\controllers\\":"apps/controllers/"
     }
   }
 }

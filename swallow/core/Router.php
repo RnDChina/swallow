@@ -283,7 +283,7 @@ class Router
                 if (is_object($route['action']) && is_callable($route['action'])) {
                     call_user_func_array($route['action'], $params);
                 } else {
-                    $parts = explode('/',$route['action']);
+                    $parts = explode('//',$route['action']);
                     $last = end($parts);
                     $segments = explode('@',$last);
                     $controller = new $segments[0]();
