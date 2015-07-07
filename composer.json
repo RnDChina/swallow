@@ -11,10 +11,8 @@
     {"packagist": false}
   ],
   "autoload": {
-    "classmap": [
-      "apps/controllers",
-      "apps/models",
-      "swallow"
-    ]
+    "psr-4": {
+      "swallow\\":"swallow/"
+    }
   }
 }

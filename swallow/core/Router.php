@@ -106,7 +106,6 @@ class Router
         $replaces = array_values(static::$patterns);
 
         $route_is_existed = false;
-
         if (in_array($uri, self::$routes)) {
             $route_pos = array_keys(self::$routes, $uri);
             foreach ($route_pos as $route) {

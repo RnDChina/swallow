@@ -2,6 +2,7 @@
 use swallow\core\Router;
 
 //路由配置
+Router::get('/','HomeController@index');
 
 Router::get('/(:any)','/test@getName');
 
