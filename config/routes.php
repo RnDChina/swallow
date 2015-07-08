@@ -10,6 +10,7 @@ $router->setPatterns(array(
     ':any' => '[^/]+',
     ':all' => '.*'
 ));
+/*
 
 $router->get('/user/:num/:string/:num/',function(){
     echo 'welcome';
@@ -46,7 +47,7 @@ $router->addRoute(['GET','POST'],'/abc',function(){
 
 //支持任意http方法
 $router->any('/([0-9]+)',function($a){
-    echo $a;
+    echo "ff--".$a;
 });
-
+*/
 return $router;
