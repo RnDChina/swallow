@@ -11,12 +11,13 @@
     {"packagist": false}
   ],
   "autoload": {
-    "classmap":[
-        "apps/controllers"
-    ],
     "psr-4": {
       "swallow\\":"swallow/",
-      "apps\\controllers\\":"apps/controllers/"
-    }
+      "apps\\":"apps/"
+    },
+    "files":[
+      "config/config.php",
+      "config/routes.php"
+    ]
   }
 }

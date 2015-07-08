@@ -225,7 +225,7 @@ class Router
                 call_user_func($this->notFound);
             } else {
                 header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
-                echo "<h1>404 Not Found.</h1>";die;
+                echo "404 Not Found.";die;
             }
         } else {
             if ($callback != null) {

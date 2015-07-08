@@ -1,9 +1,9 @@
 <?php
-
 use swallow\core\Router;
 
 $router = new Router();
 
+//设置路由参数
 $router->setPatterns(array(
     ':num' => '[0-9]+',
     ':string' => '[a-zA-Z]+',
@@ -19,14 +19,34 @@ $router->get('/user/:num/:string/:num/',function(){
     echo 'welcome2';
 });
 
-$router->get('/test','apps/controller/HomeController@index');
+$router->get('/test/:num','apps\home\controllers\IndexController@index');
 
-//$router->addRoute(['GET','POST'],'/abc',function(){
-//   echo "abc";
-//});
+//路由嵌套
+$router->mount('/about',function() use ($router) {
+    $router->get('/company',function() {
+        echo "公司简介";
+    });
 
-//$router->any('/([0-9]+)',function($a){
-//    echo $a;
-//});
+    $router->get('/picture',function() {
+        echo "员工风采";
+    });
 
-$router->run();
+    $router->mount('/desktop',function() use ($router) {
+        $router->get('/my/(:string)/(:num)',function($name,$id){
+            echo "我的桌面>".$name.">".$id;
+        });
+    });
+});
+
+//自定义支持的http方法
+$router->addRoute(['GET','POST'],'/abc',function(){
+    print_r($_SERVER['PATH_INFO']);
+   echo "abc";
+});
+
+//支持任意http方法
+$router->any('/([0-9]+)',function($a){
+    echo $a;
+});
+
+return $router;
