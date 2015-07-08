@@ -8,6 +8,10 @@ class IndexController extends BaseController {
 
     public function index() {
 
+        //print_r($_POST);
+
+        print_r($_GET);exit;
+
         $namespace = str_replace('\\','.',ltrim('apps\home\controllers\IndexController','\\'));
         echo $namespace;exit;
         if(($path=self::getPathOfAlias($namespace))!==false && is_file($path.'.php')) {

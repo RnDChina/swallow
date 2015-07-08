@@ -268,6 +268,7 @@ class Router
         foreach ($routes as $route) {
             if (preg_match_all('~^'. $route['pattern'] .'$~',$uri,$matches,PREG_OFFSET_CAPTURE)) {
                 $matches = array_slice($matches, 1);
+
                 $params = array_map(function ($match, $index) use ($matches) {
                     if (
                         isset($matches[$index+1]) &&
@@ -305,6 +306,7 @@ class Router
     {
         $basepath = implode('/',array_slice(explode('/',$_SERVER['SCRIPT_NAME']),0,-1)) . '/';
         $uri = substr($_SERVER['REQUEST_URI'],strlen($basepath));
+        print_r($uri);exit;
         if (strstr($uri,'?')) {
             $uri = substr($uri,0,strpos($uri,'?'));
         }
