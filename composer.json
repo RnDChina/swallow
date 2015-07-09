@@ -14,10 +14,6 @@
     "psr-4": {
       "swallow\\":"swallow/",
       "apps\\":"apps/"
-    },
-    "files":[
-      "config/config.php",
-      "config/routes.php"
-    ]
+    }
   }
 }

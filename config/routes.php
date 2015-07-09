@@ -4,9 +4,7 @@ use swallow\core\Router;
 $router = new Router();
 
 //设置路由参数
-$router
-
-->setPatterns(array(
+$router->setPatterns(array(
     ':num' => '[0-9]+',
     ':string' => '[a-zA-Z]+',
     ':any' => '[^/]+',
@@ -42,6 +40,7 @@ $router
 
 //自定义支持的http方法
 ->addRoute(['GET','POST'],'/abc',function(){
+    print_r($_SERVER['PATH_INFO']);
    echo "abc";
 })
 
