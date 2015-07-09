@@ -34,4 +34,9 @@ class IndexController extends BaseController {
     public function abc() {
         echo "abc";
     }
+
+    public function getIndex()
+    {
+        echo ";sss";
+    }
 }
