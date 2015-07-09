@@ -64,7 +64,7 @@ class Swallow
      */
     public function startMvc()
     {
-        $routerMvc = function ($module=null, $controller=null, $action=null) {
+        $routerMvc = function ($module=null, $controller=null, $action=null,$params=null) {
             $module = empty($module) ? 'home' : $module;
             $controller = empty($controller) ? 'index' : $controller;
             $action = empty($action) ? 'index' : $action;
@@ -89,10 +89,12 @@ class Swallow
                 echo "module '".$module."' is not exist.";
             }
         };
-        $this->router->get('/',$routerMvc);
-        $this->router->get('/(:string)',$routerMvc);
-        $this->router->get('/(:string)/(:string)',$routerMvc);
-        $this->router->get('/(:string)/(:string)/(:string)',$routerMvc);
+        $this->router
+            ->get('/',$routerMvc)
+            ->get('/(:module)',$routerMvc)
+            ->get('/(:module)/(:controller)',$routerMvc)
+            ->get('/(:module)/(:controller)/(:action)',$routerMvc)
+            ->get('/(:module)/(:controller)/(:action)/(:params)',$routerMvc);
     }
 
     private function __constuct(){}

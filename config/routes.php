@@ -21,8 +21,8 @@ $router->setPatterns(array(
 
 ->get('/test/:num','apps\home\controllers\IndexController@index')
 
-//路由嵌套
-->mount('/about',function() use ($router) {
+//路由分组
+->group('/about',function() use ($router) {
     $router->get('/company',function() {
         echo "公司简介";
     });
@@ -31,7 +31,7 @@ $router->setPatterns(array(
         echo "员工风采";
     });
 
-    $router->mount('/desktop',function() use ($router) {
+    $router->group('/desktop',function() use ($router) {
         $router->get('/my/(:string)/(:num)',function($name,$id){
             echo "我的桌面>".$name.">".$id;
         });

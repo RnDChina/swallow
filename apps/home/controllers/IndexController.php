@@ -35,8 +35,11 @@ class IndexController extends BaseController {
         echo "abc";
     }
 
-    public function getIndex()
+    public function ccc()
     {
-        echo ";sss";
+        $aFullUrl = explode('/',trim($_SERVER['REQUEST_URI'],'/'));
+        $aScript = explode('/',trim($_SERVER['SCRIPT_NAME'],'/'));
+        print_r($aFullUrl);
+        print_r($aScript);exit;
     }
 }

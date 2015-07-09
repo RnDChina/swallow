@@ -24,13 +24,12 @@ class Router
      * 路由参数
      * @var array
      */
-    private $patterns = array();
-
-    /*array(
-        ':any' => '[^/]+',
-        ':num' => '[0-9]+',
-        ':all' => '.*'
-    );*/
+    private $patterns = array(
+            ':module' => '[\w]+',
+            ':controller' => '[\w]+',
+            ':action' => '[\w]+',
+            ':params' => '[^/]+'
+        );
 
     /**
      * 路由列表
@@ -164,7 +163,13 @@ class Router
         return $this;
     }
 
-    public function mount($baseroute, $action)
+    /**
+     * 分组路由、路由前缀
+     * @param $baseroute
+     * @param $action
+     * @return $this
+     */
+    public function group($baseroute, $action)
     {
         $curBaseroute = $this->baseroute;
         $this->baseroute .= $baseroute;
