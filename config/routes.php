@@ -1,0 +1,53 @@
+<?php
+use swallow\core\Router;
+
+$router = new Router();
+
+//设置路由参数
+$router->setPatterns(array(
+    ':num' => '[0-9]+',
+    ':string' => '[a-zA-Z]+',
+    ':any' => '[^/]+',
+    ':all' => '.*'
+));
+/*
+
+$router->get('/user/:num/:string/:num/',function(){
+    echo 'welcome';
+});
+
+$router->get('/user/:num/:string/:num/',function(){
+    echo 'welcome2';
+});
+
+$router->get('/test/:num','apps\home\controllers\IndexController@index');
+
+//路由嵌套
+$router->mount('/about',function() use ($router) {
+    $router->get('/company',function() {
+        echo "公司简介";
+    });
+
+    $router->get('/picture',function() {
+        echo "员工风采";
+    });
+
+    $router->mount('/desktop',function() use ($router) {
+        $router->get('/my/(:string)/(:num)',function($name,$id){
+            echo "我的桌面>".$name.">".$id;
+        });
+    });
+});
+
+//自定义支持的http方法
+$router->addRoute(['GET','POST'],'/abc',function(){
+    print_r($_SERVER['PATH_INFO']);
+   echo "abc";
+});
+
+//支持任意http方法
+$router->any('/([0-9]+)',function($a){
+    echo "ff--".$a;
+});
+*/
+return $router;
