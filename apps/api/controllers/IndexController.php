@@ -1,4 +1,5 @@
 <?php
+namespace apps\api\controllers;
 /**
  * ----------------------
  * IndexController.php
@@ -11,6 +12,7 @@
 
 class IndexController {
     public function index() {
-        echo 'api->index';
+        print_r($_GET);exit;
+        echo 'api->index->index';
     }
 }

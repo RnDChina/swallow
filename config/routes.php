@@ -9,21 +9,20 @@ $router->setPatterns(array(
     ':string' => '[a-zA-Z]+',
     ':any' => '[^/]+',
     ':all' => '.*'
-));
-/*
+))
 
-$router->get('/user/:num/:string/:num/',function(){
+->get('/user/:num/:string/:num/',function(){
     echo 'welcome';
-});
+})
 
-$router->get('/user/:num/:string/:num/',function(){
+->get('/user/:num/:string/:num/',function(){
     echo 'welcome2';
-});
+})
 
-$router->get('/test/:num','apps\home\controllers\IndexController@index');
+->get('/test/:num','apps\home\controllers\IndexController@index')
 
-//路由嵌套
-$router->mount('/about',function() use ($router) {
+//路由分组
+->group('/about',function() use ($router) {
     $router->get('/company',function() {
         echo "公司简介";
     });
@@ -32,22 +31,22 @@ $router->mount('/about',function() use ($router) {
         echo "员工风采";
     });
 
-    $router->mount('/desktop',function() use ($router) {
+    $router->group('/desktop',function() use ($router) {
         $router->get('/my/(:string)/(:num)',function($name,$id){
             echo "我的桌面>".$name.">".$id;
         });
     });
-});
+})
 
 //自定义支持的http方法
-$router->addRoute(['GET','POST'],'/abc',function(){
+->addRoute(['GET','POST'],'/abc',function(){
     print_r($_SERVER['PATH_INFO']);
    echo "abc";
-});
+})
 
 //支持任意http方法
-$router->any('/([0-9]+)',function($a){
-    echo "ff--".$a;
+->any('/([0-9]+)',function($a){
+    echo $a;
 });
-*/
+
 return $router;

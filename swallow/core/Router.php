@@ -1,8 +1,8 @@
 <?php
 /**
  * ----------------------
- * SwRouter.php
- * 
+ * Router.php
+ *
  * User: jian0307@icloud.com
  * Date: 2015/7/7
  * Time: 9:50
@@ -24,13 +24,12 @@ class Router
      * 路由参数
      * @var array
      */
-    private $patterns = array();
-
-    /*array(
-        ':any' => '[^/]+',
-        ':num' => '[0-9]+',
-        ':all' => '.*'
-    );*/
+    private $patterns = array(
+            ':module' => '[\w]+',
+            ':controller' => '[\w]+',
+            ':action' => '[\w]+',
+            ':params' => '[^/]+'
+        );
 
     /**
      * 路由列表
@@ -64,10 +63,12 @@ class Router
     /**
      * 设置404处理函数
      * @param $action
+     * @return $this
      */
     public function set404($action)
     {
         $this->notFound = $action;
+        return $this;
     }
 
     /**
@@ -75,6 +76,7 @@ class Router
      * 将请求方法，请求的方法类型，匹配规则，回调函数压入routes数组
      * @param string $name 请求的方法名
      * @param array $arguments 请求的方法参数
+     * @return $this
      */
     public function __call($name, $arguments)
     {
@@ -89,27 +91,32 @@ class Router
                 }
             }
         }
+        return $this;
     }
 
     /**
      * 定义路由参数
      * @param $key
      * @param $value
+     * @return $this
      */
     public function setPattern($key,$value)
     {
         $this->patterns[$key] = $value;
+        return $this;
     }
 
     /**
      * 批量定义路由参数
      * @param array $patterns
+     * @return $this
      */
     public function setPatterns($patterns)
     {
         foreach ($patterns as $key => $pattern) {
             $this->setPattern($key, $pattern);
         }
+        return $this;
     }
 
     /**
@@ -117,6 +124,7 @@ class Router
      * @param array $requestMethods HTTP请求方法 GET/POST/PUT/DELETE/PATCH/OPTIONS/HEAD
      * @param string $pattern 匹配规则
      * @param string $action 处理函数
+     * @return $this
      */
     public function before($requestMethods,$pattern,$action)
     {
@@ -128,6 +136,7 @@ class Router
                 'action' => $action
             );
         }
+        return $this;
     }
 
     /**
@@ -135,6 +144,7 @@ class Router
      * @param array $requestMethods HTTP请求方法 GET/POST/PUT/DELETE/PATCH/OPTIONS/HEAD
      * @param string $pattern 匹配规则
      * @param string $action 处理函数
+     * @return $this 支持连贯操作
      */
     public function addRoute($requestMethods, $pattern, $action)
     {
@@ -150,14 +160,22 @@ class Router
                 'action' => $action
             ));
         }
+        return $this;
     }
 
-    public function mount($baseroute, $action)
+    /**
+     * 分组路由、路由前缀
+     * @param $baseroute
+     * @param $action
+     * @return $this
+     */
+    public function group($baseroute, $action)
     {
         $curBaseroute = $this->baseroute;
         $this->baseroute .= $baseroute;
         call_user_func($action);
         $this->baseroute = $curBaseroute;
+        return $this;
     }
 
     /**
@@ -234,7 +252,7 @@ class Router
         }
 
         if ( $this->requestMethod == 'HEAD') {
-           ob_end_clean();
+            ob_end_clean();
         }
 
         if ( $numHandled === 0 ) {
@@ -274,7 +292,7 @@ class Router
                         isset($matches[$index+1]) &&
                         isset($matches[$index+1][0]) &&
                         is_array($matches[$index+1][0]
-                    )) {
+                        )) {
                         return trim(substr($match[0][0], 0, $matches[$index+1][0][1] - $match[0][1]), '/');
                     } else {
                         return (isset($match[0][0]) ? trim($match[0][0], '/') : null);
