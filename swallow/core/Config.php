@@ -17,11 +17,20 @@ class Config {
     private static $configs = array();
 
     /**
+     * 初始化配置
+     * @param array $configs
+     */
+    public function init($configs)
+    {
+        self::$configs = $configs;
+    }
+
+    /**
      * 获取配置项
      * @param string $key
      * @return null|mixed
      */
-    public static function get($key)
+    public function get($key)
     {
         if (isset(self::$configs[$key])) {
             return self::$configs[$key];
@@ -34,7 +43,7 @@ class Config {
      * @param string $key
      * @param mixed $value
      */
-    public static function set($key,$value)
+    public function set($key,$value)
     {
         self::$configs[$key] = $value;
     }
@@ -43,11 +52,8 @@ class Config {
      * 合并配置项
      * @param array $extconfig
      */
-    public static function merge($extconfig)
+    public function merge($extconfig)
     {
         self::$configs = array_merge(self::$configs,$extconfig);
     }
-
-    private function __contruct(){}
-    private function __clone(){}
 }

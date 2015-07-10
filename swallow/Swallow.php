@@ -15,16 +15,19 @@ use swallow\core\Router;
 class Swallow
 {
     /**
+     * 全局配置
      * @var
      */
     public $config;
 
     /**
+     * 加载器
      * @var
      */
     public $loader;
 
     /**
+     * 路由
      * @var
      */
     public $router;
@@ -49,6 +52,15 @@ class Swallow
         }
         $this->startMvc();
         $this->router->run();
+    }
+
+    /**
+     * 设置配置
+     * @param $config
+     */
+    public function setConfig($config)
+    {
+        $this->config = $config;
     }
 
     /**
