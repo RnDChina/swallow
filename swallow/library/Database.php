@@ -416,13 +416,12 @@ class Database {
     }
 
     /**
+     *生成一个查询操作
      *
-     * Builds a select query.
-     *
-     * @param array|string $fields Array of field names to select
-     * @param int $limit Limit condition
-     * @param int $offset Offset condition
-     * @return object Self reference
+     * @param array|string $fields 查询的字段名或者数组
+     * @param int $limit limit条件
+     * @param int $offset 偏移条件
+     * @return object 自引用
      */
     public function select($fields = '*', $limit = null, $offset = null) {
         $this->checkTable();
@@ -444,11 +443,12 @@ class Database {
         ));
         return $this;
     }
+
     /**
-     * Builds an insert query.
+     * 生成一个插入操作
      *
-     * @param array $data Array of key and values to insert
-     * @return object Self reference
+     * @param array $data
+     * @return object 自引用
      */
     public function insert(array $data) {
         $this->checkTable();
@@ -469,11 +469,12 @@ class Database {
         ));
         return $this;
     }
+
     /**
-     * Builds an update query.
+     * 更新操作
      *
-     * @param string|array $data Array of keys and values, or string literal
-     * @return object Self reference
+     * @param string|array
+     * @return object 自引用
      */
     public function update($data) {
         $this->checkTable();
@@ -496,11 +497,12 @@ class Database {
         ));
         return $this;
     }
+
     /**
-     * Builds a delete query.
+     * 删除操作
      *
-     * @param array $where Where conditions
-     * @return object Self reference
+     * @param array $where 条件
+     * @return object 自引用
      */
     public function delete($where = null) {
         $this->checkTable();
@@ -514,11 +516,12 @@ class Database {
         ));
         return $this;
     }
+
     /**
-     * Gets or sets the SQL statement.
+     * 获取或者设置sql语句
      *
-     * @param string|array SQL statement
-     * @return string SQL statement
+     * @param string|array sql语句
+     * @return string sql语句
      */
     public function sql($sql = null) {
         if ($sql !== null) {
@@ -531,20 +534,18 @@ class Database {
         }
         return $this->sql;
     }
-    /*** Database Access Methods ***/
+
     /**
-     * Sets the database connection.
+     * 设置数据库连接参数
      *
-     * @param string|array|object $db Database connection string, array or object
-     * @throws Exception For connection error
+     * @param string|array|object $db 数据库连接参数：字符串、数组或对象
+     * @throws Exception 数据库连接异常
      */
     public function setDb($db) {
         $this->db = null;
-        // Connection string
         if (is_string($db)) {
             $this->setDb($this->parseConnection($db));
         }
-        // Connection information
         else if (is_array($db)) {
             switch ($db['type']) {
                 case 'mysqli':
@@ -620,7 +621,6 @@ class Database {
             }
             $this->db_type = $db['type'];
         }
-        // Connection object or resource
         else {
             $type = $this->getDbType($db);
             if (!in_array($type, self::$db_types)) {
@@ -630,19 +630,21 @@ class Database {
             $this->db_type = $type;
         }
     }
+
     /**
-     * Gets the database connection.
+     * 获取数据库连接对象
      *
-     * @return object Database connection
+     * @return object 数据库连接对象
      */
     public function getDb() {
         return $this->db;
     }
+
     /**
-     * Gets the database type.
+     * 获取数据库类型
      *
-     * @param object|resource $db Database object or resource
-     * @return string Database type
+     * @param object|resource $db 数据库对象或者资源
+     * @return string 数据库类型
      */
     public function getDbType($db) {
         if (is_object($db)) {
@@ -660,13 +662,14 @@ class Database {
         }
         return null;
     }
+
     /**
-     * Executes a sql statement.
+     * 执行一个sql语句
      *
-     * @param string $key Cache key
-     * @param int $expire Expiration time in seconds
-     * @return object Query results object
-     * @throws Exception When database is not defined
+     * @param string $key 缓存键
+     * @param int $expire 过期时间（秒）
+     * @return object 执行结果
+     * @throws Exception
      */
     public function execute($key = null, $expire = 0) {
         if (!$this->db) {
@@ -791,11 +794,12 @@ class Database {
         }
         return $result;
     }
+
     /**
-     * Fetch multiple rows from a select query.
+     * 取多条查询结果
      *
-     * @param string $key Cache key
-     * @param int $expire Expiration time in seconds
+     * @param string $key 缓存key
+     * @param int $expire 过期时间（秒）
      * @return array Rows
      */
     public function many($key = null, $expire = 0) {
@@ -858,11 +862,12 @@ class Database {
         }
         return $data;
     }
+
     /**
-     * Fetch a single row from a select query.
+     * 取一条查询结果
      *
-     * @param string $key Cache key
-     * @param int $expire Expiration time in seconds
+     * @param string $key 缓存键
+     * @param int $expire 过期时间（秒）
      * @return array Row
      */
     public function one($key = null, $expire = 0) {
@@ -873,26 +878,28 @@ class Database {
         $row = (!empty($data)) ? $data[0] : array();
         return $row;
     }
+
     /**
-     * Fetch a value from a field.
+     * 取一个字段的值
      *
-     * @param string $name Database field name
-     * @param string $key Cache key
-     * @param int $expire Expiration time in seconds
-     * @return mixed Row value
+     * @param string $name 字段名
+     * @param string $key 缓存键
+     * @param int $expire 过期时间（秒）
+     * @return mixed 值
      */
     public function value($name, $key = null, $expire = 0) {
         $row = $this->one($key, $expire);
         $value = (!empty($row)) ? $row[$name] : null;
         return $value;
     }
+
     /**
-     * Gets the min value for a specified field.
+     * 求最小值
      *
-     * @param string $field Field name
-     * @param int $expire Expiration time in seconds
-     * @param string $key Cache key
-     * @return object Self reference
+     * @param string $field 字段名
+     * @param int $expire 过期时间（秒）
+     * @param string $key 缓存键
+     * @return object 自引用
      */
     public function min($field, $key = null, $expire = 0) {
         $this->select('MIN('.$field.') min_value');
@@ -902,13 +909,14 @@ class Database {
             $expire
         );
     }
+
     /**
-     * Gets the max value for a specified field.
+     * 求最大值
      *
-     * @param string $field Field name
-     * @param int $expire Expiration time in seconds
-     * @param string $key Cache key
-     * @return object Self reference
+     * @param string $field 字段名
+     * @param int $expire 过期时间（秒）
+     * @param string $key 缓存键
+     * @return object 自引用
      */
     public function max($field, $key = null, $expire = 0) {
         $this->select('MAX('.$field.') max_value');
@@ -918,13 +926,14 @@ class Database {
             $expire
         );
     }
+
     /**
-     * Gets the sum value for a specified field.
+     * 求和
      *
-     * @param string $field Field name
-     * @param int $expire Expiration time in seconds
-     * @param string $key Cache key
-     * @return object Self reference
+     * @param string $field 字段名
+     * @param int $expire 过期时间（秒）
+     * @param string $key 缓存键
+     * @return object 自引用
      */
     public function sum($field, $key = null, $expire = 0) {
         $this->select('SUM('.$field.') sum_value');
@@ -934,13 +943,14 @@ class Database {
             $expire
         );
     }
+
     /**
-     * Gets the average value for a specified field.
+     * 求平均值
      *
-     * @param string $field Field name
-     * @param int $expire Expiration time in seconds
-     * @param string $key Cache key
-     * @return object Self reference
+     * @param string $field 字段名
+     * @param int $expire 过期时间（秒）
+     * @param string $key 缓存键
+     * @return object 自引用
      */
     public function avg($field, $key = null, $expire = 0) {
         $this->select('AVG('.$field.') avg_value');
@@ -950,13 +960,14 @@ class Database {
             $expire
         );
     }
+
     /**
-     * Gets a count of records for a table.
+     * 求记录数量
      *
-     * @param string $field Field name
-     * @param string $key Cache key
-     * @param int $expire Expiration time in seconds
-     * @return object Self reference
+     * @param string $field 字段
+     * @param string $key 缓存键
+     * @param int $expire 过期时间（秒）
+     * @return object 自引用
      */
     public function count($field = '*', $key = null, $expire = 0) {
         $this->select('COUNT('.$field.') num_rows');
@@ -966,11 +977,12 @@ class Database {
             $expire
         );
     }
+
     /**
-     * Wraps quotes around a string and escapes the content for a string parameter.
+     * 转移
      *
-     * @param mixed $value mixed value
-     * @return mixed Quoted value
+     * @param mixed $value 原值
+     * @return mixed 转移后的值
      */
     public function quote($value) {
         if ($value === null) return 'NULL';
@@ -1000,16 +1012,15 @@ class Database {
         }
         return $value;
     }
-    /*** Cache Methods ***/
+
     /**
-     * Sets the cache connection.
+     * 设置缓存连接
      *
-     * @param string|object $cache Cache connection string or object
-     * @throws Exception For invalid cache type
+     * @param string|object $cache 缓存连接字符串或者对象
+     * @throws Exception 无效的缓存类型异常
      */
     public function setCache($cache) {
         $this->cache = null;
-        // Connection string
         if (is_string($cache)) {
             if ($cache{0} == '.' || $cache{0} == '/') {
                 $this->cache = $cache;
@@ -1019,7 +1030,6 @@ class Database {
                 $this->setCache($this->parseConnection($cache));
             }
         }
-        // Connection information
         else if (is_array($cache)) {
             switch ($cache['type']) {
                 case 'memcache':
@@ -1041,7 +1051,6 @@ class Database {
             }
             $this->cache_type = $cache['type'];
         }
-        // Cache object
         else if (is_object($cache)) {
             $type = strtolower(get_class($cache));
             if (!in_array($type, self::$cache_types)) {
@@ -1051,20 +1060,22 @@ class Database {
             $this->cache_type = $type;
         }
     }
+
     /**
-     * Gets the cache instance.
+     * 获取缓存实例
      *
-     * @return object Cache instance
+     * @return object
      */
     public function getCache() {
         return $this->cache;
     }
+
     /**
-     * Stores a value in the cache.
+     * 存储到缓存
      *
-     * @param string $key Cache key
-     * @param mixed $value Value to store
-     * @param int $expire Expiration time in seconds
+     * @param string $key 键
+     * @param mixed $value 值
+     * @param int $expire 过期时间（秒）
      */
     public function store($key, $value, $expire = 0) {
         $key = $this->key_prefix.$key;
@@ -1093,11 +1104,12 @@ class Database {
                 $this->cache[$key] = $value;
         }
     }
+
     /**
-     * Fetches a value from the cache.
+     * 从缓存里面取值
      *
-     * @param string $key Cache key
-     * @return mixed Cached value
+     * @param string $key 键
+     * @return mixed 值
      */
     public function fetch($key) {
         $key = $this->key_prefix.$key;
@@ -1132,11 +1144,12 @@ class Database {
         }
         return null;
     }
+
     /**
-     * Clear a value from the cache.
+     * 根据键清除一个值
      *
-     * @param string $key Cache key
-     * @return object Self reference
+     * @param string $key 键
+     * @return object 自引用
      */
     public function clear($key) {
         $key = $this->key_prefix.$key;
@@ -1163,8 +1176,9 @@ class Database {
                 return false;
         }
     }
+
     /**
-     * Flushes out the cache.
+     * 刷新
      */
     public function flush() {
         switch ($this->cache_type) {
@@ -1178,7 +1192,9 @@ class Database {
                 apc_clear_cache();
                 break;
             case 'xcache':
-                xcache_clear_cache();
+                if (function_exists('xcache_clear_cache') && defined(XC_TYPE_PHP)) {
+                    xcache_clear_cache(XC_TYPE_PHP);
+                }
                 break;
             case 'file':
                 if ($handle = opendir($this->cache)) {
@@ -1195,12 +1211,12 @@ class Database {
                 break;
         }
     }
-    /*** Object Methods ***/
+
     /**
-     * Sets the class.
+     * 设置类
      *
-     * @param string|object $class Class name or instance
-     * @return object Self reference
+     * @param string|object $class 类名或者实例
+     * @return object 自引用
      */
     public function using($class) {
         if (is_string($class)) {
@@ -1212,12 +1228,13 @@ class Database {
         $this->reset();
         return $this;
     }
+
     /**
-     * Loads properties for an object.
+     * 载入一个对象的属性
      *
-     * @param object $object Class instance
-     * @param array $data Property data
-     * @return object Populated object
+     * @param object $object 类实例
+     * @param array $data 属性数据
+     * @return object 填充对象
      */
     public function load($object, array $data) {
         foreach ($data as $key => $value) {
@@ -1229,11 +1246,11 @@ class Database {
     }
 
     /**
-     * Finds and populates an object.
+     * 查找并填充一个对象
      *
-     * @param int|string|array Search value
-     * @param string $key Cache key
-     * @return object Populated object
+     * @param int|string|array 查找值
+     * @param string $key 缓存键
+     * @return object 填充对象
      */
     public function find($value = null, $key = null) {
         $this->checkClass();
@@ -1260,11 +1277,12 @@ class Database {
         }
         return (sizeof($objects) == 1) ? $objects[0] : $objects;
     }
+
     /**
-     * Saves an object to the database.
+     * 保存对象到数据库
      *
-     * @param object $object Class instance
-     * @param array $fields Select database fields to save
+     * @param object $object
+     * @param array $fields 要保存的数据库字段
      */
     public function save($object, array $fields = null) {
         $this->using($object);
@@ -1289,10 +1307,11 @@ class Database {
         }
         return $this->class;
     }
+
     /**
-     * Removes an object from the database.
+     * 从数据库删除对象
      *
-     * @param object $object Class instance
+     * @param object $object
      */
     public function remove($object) {
         $this->using($object);
@@ -1305,10 +1324,11 @@ class Database {
                 ->execute();
         }
     }
+
     /**
-     * Gets class properties.
+     * 获取类属性
      *
-     * @return object Class properties
+     * @return object
      */
     public function getProperties() {
         static $properties = array();
