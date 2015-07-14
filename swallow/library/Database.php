@@ -13,7 +13,8 @@ namespace swallow\library;
 /**
  * 数据库类
  */
-class Database {
+class Database
+{
     protected $table;
     protected $where;
     protected $joins;
@@ -51,7 +52,8 @@ class Database {
     public $show_sql = false;
     public $key_prefix = '';
 
-    public function __construct() {
+    public function __construct()
+    {
     }
 
     /**
@@ -61,7 +63,8 @@ class Database {
      * @param string $input 追加输入字符串
      * @return string 新的Sql语句
      */
-    public function build($sql, $input) {
+    public function build($sql, $input)
+    {
         return (strlen($input) > 0) ? ($sql.' '.$input) : $sql;
     }
 
@@ -72,7 +75,8 @@ class Database {
      * @return array 连接信息
      * @throws Exception 无效的连接字符串
      */
-    public function parseConnection($connection) {
+    public function parseConnection($connection)
+    {
         $url = parse_url($connection);
         if (empty($url)) {
             throw new Exception('Invalid connection string.');
@@ -90,7 +94,8 @@ class Database {
     /**
      * 获取查询统计
      */
-    public function getStats() {
+    public function getStats()
+    {
         $this->stats['total_time'] = 0;
         $this->stats['num_queries'] = 0;
         $this->stats['num_rows'] = 0;
@@ -112,7 +117,8 @@ class Database {
     /**
      * 检查表属性是否已设置
      */
-    public function checkTable() {
+    public function checkTable()
+    {
         if (!$this->table) {
             throw new Exception('Table is not defined.');
         }
@@ -121,7 +127,8 @@ class Database {
     /**
      * 检查类属性是否已设置
      */
-    public function checkClass() {
+    public function checkClass()
+    {
         if (!$this->class) {
             throw new Exception('Class is not defined.');
         }
@@ -130,7 +137,8 @@ class Database {
     /**
      * 重置类属性
      */
-    public function reset() {
+    public function reset()
+    {
         $this->where = '';
         $this->joins = '';
         $this->order = '';
@@ -152,7 +160,8 @@ class Database {
      * @return string 条件
      * @throws Exception
      */
-    protected function parseCondition($field, $value = null, $join = '', $escape = true) {
+    protected function parseCondition($field, $value = null, $join = '', $escape = true)
+    {
         if (is_string($field)) {
             if ($value === null) return $join.' '.trim($field);
             $operator = '';
@@ -211,7 +220,8 @@ class Database {
      * @param boolean $reset 是否重置类属性
      * @return object 自引用
      */
-    public function from($table, $reset = true) {
+    public function from($table, $reset = true)
+    {
         $this->table = $table;
         if ($reset) {
             $this->reset();
@@ -228,7 +238,8 @@ class Database {
      * @return object 自引用
      * @throws Exception 无效的连接类型异常
      */
-    public function join($table, array $fields, $type = 'INNER') {
+    public function join($table, array $fields, $type = 'INNER')
+    {
         static $joins = array(
             'INNER',
             'LEFT OUTER',
@@ -250,7 +261,8 @@ class Database {
      * @param array $fields 要join on的表字段
      * @return object 自引用
      */
-    public function leftJoin($table, array $fields) {
+    public function leftJoin($table, array $fields)
+    {
         return $this->join($table, $fields, 'LEFT OUTER');
     }
 
@@ -261,7 +273,8 @@ class Database {
      * @param array $fields 要join on的表字段
      * @return object 自引用
      */
-    public function rightJoin($table, array $fields) {
+    public function rightJoin($table, array $fields)
+    {
         return $this->join($table, $fields, 'RIGHT OUTER');
     }
 
@@ -272,7 +285,8 @@ class Database {
      * @param array $fields 要join on的表字段
      * @return object 自引用
      */
-    public function fullJoin($table, array $fields) {
+    public function fullJoin($table, array $fields)
+    {
         return $this->join($table, $fields, 'FULL OUTER');
     }
 
@@ -283,7 +297,8 @@ class Database {
      * @param string $value 字段值
      * @return object 自引用
      */
-    public function where($field, $value = null) {
+    public function where($field, $value = null)
+    {
         $join = (empty($this->where)) ? 'WHERE' : '';
         $this->where .= $this->parseCondition($field, $value, $join);
         return $this;
@@ -295,7 +310,8 @@ class Database {
      * @param string $field 字段名
      * @return object 自引用
      */
-    public function sortAsc($field) {
+    public function sortAsc($field)
+    {
         return $this->orderBy($field, 'ASC');
     }
 
@@ -305,7 +321,8 @@ class Database {
      * @param string $field 字段名
      * @return object 自引用
      */
-    public function sortDesc($field) {
+    public function sortDesc($field)
+    {
         return $this->orderBy($field, 'DESC');
     }
 
@@ -316,7 +333,8 @@ class Database {
      * @param string $direction 升序或降序
      * @return object 自引用
      */
-    public function orderBy($field, $direction = 'ASC') {
+    public function orderBy($field, $direction = 'ASC')
+    {
         $join = (empty($this->order)) ? 'ORDER BY' : ',';
         if (is_array($field)) {
             foreach ($field as $key => $value) {
@@ -337,7 +355,8 @@ class Database {
      * @param string|array $field 字段名、字段数组
      * @return object 自引用
      */
-    public function groupBy($field) {
+    public function groupBy($field)
+    {
         $join = (empty($this->order)) ? 'GROUP BY' : ',';
         $fields = (is_array($field)) ? implode(',', $field) : $field;
         $this->groups .= $join.' '.$fields;
@@ -351,7 +370,8 @@ class Database {
      * @param string $value 字段值
      * @return object 自引用
      */
-    public function having($field, $value = null) {
+    public function having($field, $value = null)
+    {
         $join = (empty($this->having)) ? 'HAVING' : '';
         $this->having .= $this->parseCondition($field, $value, $join);
         return $this;
@@ -364,7 +384,8 @@ class Database {
      * @param int $offset 偏移量
      * @return object 自引用
      */
-    public function limit($limit, $offset = null) {
+    public function limit($limit, $offset = null)
+    {
         if ($limit !== null) {
             $this->limit = 'LIMIT '.$limit;
         }
@@ -381,7 +402,8 @@ class Database {
      * @param int $limit
      * @return object 自引用
      */
-    public function offset($offset, $limit = null) {
+    public function offset($offset, $limit = null)
+    {
         if ($offset !== null) {
             $this->offset = 'OFFSET '.$offset;
         }
@@ -394,7 +416,8 @@ class Database {
     /**
      * 设置disteinct
      */
-    public function distinct($value = true) {
+    public function distinct($value = true)
+    {
         $this->distinct = ($value) ? 'DISTINCT' : '';
         return $this;
     }
@@ -406,7 +429,8 @@ class Database {
      * @param string $value1 第一个值
      * @param string $value2 第二个值
      */
-    public function between($field, $value1, $value2) {
+    public function between($field, $value1, $value2)
+    {
         $this->where(sprintf(
             '%s BETWEEN %s AND %s',
             $field,
@@ -423,7 +447,8 @@ class Database {
      * @param int $offset 偏移条件
      * @return object 自引用
      */
-    public function select($fields = '*', $limit = null, $offset = null) {
+    public function select($fields = '*', $limit = null, $offset = null)
+    {
         $this->checkTable();
         $fields = (is_array($fields)) ? implode(',', $fields) : $fields;
         $this->limit($limit, $offset);
@@ -450,7 +475,8 @@ class Database {
      * @param array $data
      * @return object 自引用
      */
-    public function insert(array $data) {
+    public function insert(array $data)
+    {
         $this->checkTable();
         if (empty($data)) return $this;
         $keys = implode(',', array_keys($data));
@@ -476,7 +502,8 @@ class Database {
      * @param string|array
      * @return object 自引用
      */
-    public function update($data) {
+    public function update($data)
+    {
         $this->checkTable();
         if (empty($data)) return $this;
         $values = array();
@@ -504,7 +531,8 @@ class Database {
      * @param array $where 条件
      * @return object 自引用
      */
-    public function delete($where = null) {
+    public function delete($where = null)
+    {
         $this->checkTable();
         if ($where !== null) {
             $this->where($where);
@@ -523,7 +551,8 @@ class Database {
      * @param string|array sql语句
      * @return string sql语句
      */
-    public function sql($sql = null) {
+    public function sql($sql = null)
+    {
         if ($sql !== null) {
             $this->sql = trim(
                 (is_array($sql)) ?
@@ -541,7 +570,8 @@ class Database {
      * @param string|array|object $db 数据库连接参数：字符串、数组或对象
      * @throws Exception 数据库连接异常
      */
-    public function setDb($db) {
+    public function setDb($db)
+    {
         $this->db = null;
         if (is_string($db)) {
             $this->setDb($this->parseConnection($db));
@@ -636,7 +666,8 @@ class Database {
      *
      * @return object 数据库连接对象
      */
-    public function getDb() {
+    public function getDb()
+    {
         return $this->db;
     }
 
@@ -646,7 +677,8 @@ class Database {
      * @param object|resource $db 数据库对象或者资源
      * @return string 数据库类型
      */
-    public function getDbType($db) {
+    public function getDbType($db)
+    {
         if (is_object($db)) {
             return strtolower(get_class($db));
         }
@@ -671,7 +703,8 @@ class Database {
      * @return object 执行结果
      * @throws Exception
      */
-    public function execute($key = null, $expire = 0) {
+    public function execute($key = null, $expire = 0)
+    {
         if (!$this->db) {
             throw new Exception('Database is not defined.');
         }
@@ -802,7 +835,8 @@ class Database {
      * @param int $expire 过期时间（秒）
      * @return array Rows
      */
-    public function many($key = null, $expire = 0) {
+    public function many($key = null, $expire = 0)
+    {
         if (empty($this->sql)) {
             $this->select();
         }
@@ -870,7 +904,8 @@ class Database {
      * @param int $expire 过期时间（秒）
      * @return array Row
      */
-    public function one($key = null, $expire = 0) {
+    public function one($key = null, $expire = 0)
+    {
         if (empty($this->sql)) {
             $this->limit(1)->select();
         }
@@ -887,7 +922,8 @@ class Database {
      * @param int $expire 过期时间（秒）
      * @return mixed 值
      */
-    public function value($name, $key = null, $expire = 0) {
+    public function value($name, $key = null, $expire = 0)
+    {
         $row = $this->one($key, $expire);
         $value = (!empty($row)) ? $row[$name] : null;
         return $value;
@@ -901,7 +937,8 @@ class Database {
      * @param string $key 缓存键
      * @return object 自引用
      */
-    public function min($field, $key = null, $expire = 0) {
+    public function min($field, $key = null, $expire = 0)
+    {
         $this->select('MIN('.$field.') min_value');
         return $this->value(
             'min_value',
@@ -918,7 +955,8 @@ class Database {
      * @param string $key 缓存键
      * @return object 自引用
      */
-    public function max($field, $key = null, $expire = 0) {
+    public function max($field, $key = null, $expire = 0)
+    {
         $this->select('MAX('.$field.') max_value');
         return $this->value(
             'max_value',
@@ -935,7 +973,8 @@ class Database {
      * @param string $key 缓存键
      * @return object 自引用
      */
-    public function sum($field, $key = null, $expire = 0) {
+    public function sum($field, $key = null, $expire = 0)
+    {
         $this->select('SUM('.$field.') sum_value');
         return $this->value(
             'sum_value',
@@ -952,7 +991,8 @@ class Database {
      * @param string $key 缓存键
      * @return object 自引用
      */
-    public function avg($field, $key = null, $expire = 0) {
+    public function avg($field, $key = null, $expire = 0)
+    {
         $this->select('AVG('.$field.') avg_value');
         return $this->value(
             'avg_value',
@@ -969,7 +1009,8 @@ class Database {
      * @param int $expire 过期时间（秒）
      * @return object 自引用
      */
-    public function count($field = '*', $key = null, $expire = 0) {
+    public function count($field = '*', $key = null, $expire = 0)
+    {
         $this->select('COUNT('.$field.') num_rows');
         return $this->value(
             'num_rows',
@@ -984,7 +1025,8 @@ class Database {
      * @param mixed $value 原值
      * @return mixed 转移后的值
      */
-    public function quote($value) {
+    public function quote($value)
+    {
         if ($value === null) return 'NULL';
         if (is_string($value)) {
             if ($this->db !== null) {
@@ -1019,7 +1061,8 @@ class Database {
      * @param string|object $cache 缓存连接字符串或者对象
      * @throws Exception 无效的缓存类型异常
      */
-    public function setCache($cache) {
+    public function setCache($cache)
+    {
         $this->cache = null;
         if (is_string($cache)) {
             if ($cache{0} == '.' || $cache{0} == '/') {
@@ -1066,7 +1109,8 @@ class Database {
      *
      * @return object
      */
-    public function getCache() {
+    public function getCache()
+    {
         return $this->cache;
     }
 
@@ -1077,7 +1121,8 @@ class Database {
      * @param mixed $value 值
      * @param int $expire 过期时间（秒）
      */
-    public function store($key, $value, $expire = 0) {
+    public function store($key, $value, $expire = 0)
+    {
         $key = $this->key_prefix.$key;
         switch ($this->cache_type) {
             case 'memcached':
@@ -1111,7 +1156,8 @@ class Database {
      * @param string $key 键
      * @return mixed 值
      */
-    public function fetch($key) {
+    public function fetch($key)
+    {
         $key = $this->key_prefix.$key;
         switch ($this->cache_type) {
             case 'memcached':
@@ -1151,7 +1197,8 @@ class Database {
      * @param string $key 键
      * @return object 自引用
      */
-    public function clear($key) {
+    public function clear($key)
+    {
         $key = $this->key_prefix.$key;
         switch ($this->cache_type) {
             case 'memcached':
@@ -1180,7 +1227,8 @@ class Database {
     /**
      * 刷新
      */
-    public function flush() {
+    public function flush()
+    {
         switch ($this->cache_type) {
             case 'memcached':
                 $this->cache->flush();
@@ -1218,7 +1266,8 @@ class Database {
      * @param string|object $class 类名或者实例
      * @return object 自引用
      */
-    public function using($class) {
+    public function using($class)
+    {
         if (is_string($class)) {
             $this->class = $class;
         }
@@ -1236,7 +1285,8 @@ class Database {
      * @param array $data 属性数据
      * @return object 填充对象
      */
-    public function load($object, array $data) {
+    public function load($object, array $data)
+    {
         foreach ($data as $key => $value) {
             if (property_exists($object, $key)) {
                 $object->$key = $value;
@@ -1252,7 +1302,8 @@ class Database {
      * @param string $key 缓存键
      * @return object 填充对象
      */
-    public function find($value = null, $key = null) {
+    public function find($value = null, $key = null)
+    {
         $this->checkClass();
         $properties = $this->getProperties();
         $this->from($properties->table, false);
@@ -1284,7 +1335,8 @@ class Database {
      * @param object $object
      * @param array $fields 要保存的数据库字段
      */
-    public function save($object, array $fields = null) {
+    public function save($object, array $fields = null)
+    {
         $this->using($object);
         $properties = $this->getProperties();
         $this->from($properties->table);
@@ -1313,7 +1365,8 @@ class Database {
      *
      * @param object $object
      */
-    public function remove($object) {
+    public function remove($object)
+    {
         $this->using($object);
         $properties = $this->getProperties();
         $this->from($properties->table);
@@ -1330,7 +1383,8 @@ class Database {
      *
      * @return object
      */
-    public function getProperties() {
+    public function getProperties()
+    {
         static $properties = array();
         if (!$this->class) return array();
         if (!isset($properties[$this->class])) {
