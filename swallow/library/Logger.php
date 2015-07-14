@@ -44,7 +44,8 @@ class Logger
     }
 
     /**
-     * 系统不可用
+     * 严重错误
+     * 导致系统崩溃无法使用
      * @param $message
      * @param array $context
      */
@@ -54,7 +55,7 @@ class Logger
     }
 
     /**
-     * 提醒，必须立即采取行动
+     * 提醒，必须被立即修改的错误
      * 例如：数据库不可用等，应该触发短信提醒并叫醒你
      * @param $message
      * @param array $context
@@ -65,8 +66,8 @@ class Logger
     }
 
     /**
-     * 临界条件
-     * 例如：应用程序组件不可用，意外异常；
+     * 临界值错误
+     * 例如：超过临界值的错误，例如一天24小时，而输入的是25小时,应用程序组件不可用，意外异常等；
      * @param $message
      * @param array $context
      */
@@ -98,7 +99,8 @@ class Logger
     }
 
     /**
-     * 普通但重要的事件
+     * 通知
+     * 程序可以运行但是还不够完美的错误
      * @param $message
      * @param array $context
      */
