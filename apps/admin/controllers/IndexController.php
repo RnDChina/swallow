@@ -13,11 +13,14 @@ namespace apps\admin\controllers;
 class IndexController {
     public function index()
     {
+        print_r($_POST);
+
+        print_r($_GET);
         echo "admin->index->index";
     }
 
     public function test()
     {
-        echo "admin->index->index";
+        echo "admin->index->test";
     }
 }

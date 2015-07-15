@@ -2,7 +2,7 @@
 use swallow\core\Router;
 
 $router = new Router();
-
+/*
 //设置路由参数
 $router->setPatterns(array(
     ':num' => '[0-9]+',
@@ -48,5 +48,5 @@ $router->setPatterns(array(
 ->any('/([0-9]+)',function($a){
     echo $a;
 });
-
+*/
 return $router;
