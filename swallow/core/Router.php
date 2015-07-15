@@ -184,7 +184,7 @@ class Router
      */
     public function getRequestHeaders()
     {
-        if (function_exists(getallheaders)) {
+        if (function_exists('getallheaders')) {
             return getallheaders();
         }
 
@@ -292,7 +292,7 @@ class Router
                         isset($matches[$index+1]) &&
                         isset($matches[$index+1][0]) &&
                         is_array($matches[$index+1][0]
-                        )) {
+                    )) {
                         return trim(substr($match[0][0], 0, $matches[$index+1][0][1] - $match[0][1]), '/');
                     } else {
                         return (isset($match[0][0]) ? trim($match[0][0], '/') : null);
@@ -322,6 +322,7 @@ class Router
 
     private function getCurrentUri()
     {
+        print_r($_SERVER);exit;
         $basepath = implode('/',array_slice(explode('/',$_SERVER['SCRIPT_NAME']),0,-1)) . '/';
         $uri = substr($_SERVER['REQUEST_URI'],strlen($basepath));
         if (strstr($uri,'?')) {

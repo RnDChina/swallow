@@ -77,6 +77,7 @@ class Swallow
     public function startMvc()
     {
         $routerMvc = function ($module=null, $controller=null, $action=null,$params=null) {
+            //print_r($params);exit;
             $module = empty($module) ? 'home' : $module;
             $controller = empty($controller) ? 'index' : $controller;
             $action = empty($action) ? 'index' : $action;
@@ -89,7 +90,8 @@ class Swallow
                     $cls = 'apps\\'.$module.'\\controllers\\'.$cls;
                     $cins = new $cls();
                     if (is_callable([$cins,$action])) {
-                        call_user_func_array(array($cins,$action),[]);
+                        $params = ($params && is_array($params)) ? $params : [];
+                        call_user_func_array(array($cins, $action), $params);
                     } else {
                         header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
                         echo "404 Not Found.";die;
