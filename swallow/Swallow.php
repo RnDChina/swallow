@@ -102,11 +102,11 @@ class Swallow
             }
         };
         $this->router
-            ->get('/',$routerMvc)
-            ->get('/(:module)',$routerMvc)
-            ->get('/(:module)/(:controller)',$routerMvc)
-            ->get('/(:module)/(:controller)/(:action)',$routerMvc)
-            ->get('/(:module)/(:controller)/(:action)/(:params)',$routerMvc);
+            ->any('/',$routerMvc)
+            ->any('/(:module)',$routerMvc)
+            ->any('/(:module)/(:controller)',$routerMvc)
+            ->any('/(:module)/(:controller)/(:action)',$routerMvc)
+            ->any('/(:module)/(:controller)/(:action)/(:params)',$routerMvc);
     }
 
     private function __constuct(){}

@@ -208,7 +208,7 @@ class Router
             ob_start();
             $method = 'GET';
         } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $header = $this->getRequestHeaders();
+            $headers = $this->getRequestHeaders();
             if (
                 isset($headers['X-HTTP-Method-Override']) &&
                 in_array($headers['X-HTTP-Method-Override'], array('PUT', 'DELETE', 'PATCH'))
